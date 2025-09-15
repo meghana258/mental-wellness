@@ -12,6 +12,22 @@
     padding: 20px;
   }
 
+  /* Back to Dashboard Button */
+  .back {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 12px;
+    background: #f57c00;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .back:hover { background: #ef6c00; }
+
   h1 {
     text-align: center;
     color: #f57c00;
@@ -48,7 +64,7 @@
     color: #555;
   }
 
-  button {
+  button.task-btn {
     padding: 6px 12px;
     border: none;
     border-radius: 8px;
@@ -58,12 +74,14 @@
     transition: 0.2s;
   }
 
-  button:hover {
+  button.task-btn:hover {
     background: #ef6c00;
   }
 </style>
 </head>
 <body>
+
+<a href="dashboard.html" class="back">← Back to Dashboard</a>
 
 <h1>🧘 Wellness Reminders</h1>
 
@@ -101,7 +119,7 @@
       li.className = task.done ? 'completed' : '';
       li.innerHTML = `
         <span>${task.name}</span>
-        <button onclick="toggleTask(${index})">${task.done ? 'Undo' : 'Done'}</button>
+        <button class="task-btn" onclick="toggleTask(${index})">${task.done ? 'Undo' : 'Done'}</button>
       `;
       taskList.appendChild(li);
     });

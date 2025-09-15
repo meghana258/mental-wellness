@@ -15,6 +15,23 @@
     align-items: center;
   }
 
+  /* Back to Dashboard Button */
+  .back {
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 20px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 12px;
+    background: #4a90e2;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .back:hover { background: #357ABD; }
+
   .card {
     background: rgba(255,255,255,0.85);
     border-radius: 16px;
@@ -29,23 +46,16 @@
 
   label { display: block; margin-top: 10px; font-weight: 500; color: #555; }
 
-  textarea {
+  textarea, select, input[type="text"] {
     width: 100%;
-    min-height: 60px;
     padding: 8px;
     border-radius: 10px;
     border: 1px solid #ccc;
     resize: vertical;
+    margin-top: 5px;
   }
 
-  select, input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-  }
-
-  button {
+  button.submit-btn {
     display: block;
     width: 100%;
     padding: 12px;
@@ -59,12 +69,15 @@
     transition: background 0.2s;
   }
 
-  button:hover { background: #357ABD; }
+  button.submit-btn:hover { background: #357ABD; }
 
   .success { margin-top: 15px; text-align: center; color: green; font-weight: bold; }
 </style>
 </head>
 <body>
+
+<!-- Back to Dashboard Button -->
+<a href="dashboard.html" class="back">← Back to Dashboard</a>
 
 <div class="card">
   <h2>📓 Write Your Mood</h2>
@@ -95,7 +108,7 @@
       <option value="Assignment Challenge">Assignment Challenge</option>
     </select>
 
-    <button type="submit">Save Mood</button>
+    <button type="submit" class="submit-btn">Save Mood</button>
     <div class="success" id="successMsg"></div>
   </form>
 </div>

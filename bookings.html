@@ -12,6 +12,23 @@
     padding: 30px;
   }
 
+  .back {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 12px;
+    background: #81d4fa;
+    color: #1a1a2e;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  .back:hover {
+    background: #4fc3f7;
+  }
+
   h1 {
     text-align: center;
     font-size: 2rem;
@@ -80,6 +97,9 @@
 </head>
 <body>
 
+<!-- Back to Dashboard Button -->
+<a href="dashboard.html" class="back">← Back to Dashboard</a>
+
 <h1>👩‍⚕️ Book a Counselor</h1>
 
 <div class="form-container">
@@ -108,7 +128,7 @@
     <textarea id="notes" rows="4" placeholder="Optional"></textarea>
 
     <button type="submit">Book Appointment</button>
-    <div class="success" id="successMessage">✅ Appointment booked successfully!</div>
+    <div class="success" id="successMessage">✅ Appointment booked successfully! Redirecting...</div>
   </form>
 </div>
 
@@ -126,7 +146,7 @@
       notes: document.getElementById('notes').value
     };
 
-    // Get existing appointments from localStorage
+    // Save appointment in localStorage
     let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
     appointments.push(appointment);
     localStorage.setItem('appointments', JSON.stringify(appointments));
@@ -137,6 +157,11 @@
 
     // Reset form after submission
     form.reset();
+
+    // Redirect back to dashboard after 2 seconds
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 2000);
   });
 </script>
 

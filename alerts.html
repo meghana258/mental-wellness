@@ -50,6 +50,23 @@
   canvas {
     margin-top: 15px;
   }
+
+  .back-btn {
+    display: block;
+    margin: 30px auto;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    background: #b71c1c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .back-btn:hover {
+    background: #8e0000;
+  }
 </style>
 </head>
 <body>
@@ -67,6 +84,9 @@
   <h2>Mood Trends</h2>
   <canvas id="alertsMoodChart"></canvas>
 </div>
+
+<!-- Back Button -->
+<button class="back-btn" onclick="goBack()">⬅ Back to Dashboard</button>
 
 <script>
   // Fetch saved mood & feedback data
@@ -141,6 +161,11 @@
       }
     }
   });
+
+  // Go back to dashboard.html
+  function goBack(){
+    window.location.href = "dashboard.html";
+  }
 </script>
 
 </body>

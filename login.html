@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Hostel Wellness</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    }
+    .card {
+      width: 350px;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(31,38,135,0.2);
+    }
+    h2 { margin-bottom: 1rem; }
+    input {
+      width: 100%; padding: 0.8rem; margin: 0.5rem 0;
+      border-radius: 12px; border: none;
+      background: rgba(255,255,255,0.8); text-align: center;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.8rem 2rem;
+      border: none; border-radius: 30px;
+      background: linear-gradient(135deg,#6a11cb,#2575fc);
+      color: #fff; font-weight: bold; cursor: pointer;
+    }
+    .toggle {
+      margin-top: 1rem; font-size: 0.9rem; cursor: pointer;
+      color: #2d3436; text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 id="formTitle">🔑 Login</h2>
+    <input id="userId" placeholder="User ID">
+    <input id="password" type="password" placeholder="Password">
+    <button id="actionBtn">Login</button>
+    <div class="toggle" id="toggleForm">New user? Register here</div>
+  </div>
+
+  <script>
+    let isLogin = true; // Start in login mode
+
+    const formTitle = document.getElementById("formTitle");
+    const actionBtn = document.getElementById("actionBtn");
+    const toggleForm = document.getElementById("toggleForm");
+
+    toggleForm.addEventListener("click", () => {
+      isLogin = !isLogin;
+      if (isLogin) {
+        formTitle.innerText = "🔑 Login";
+        actionBtn.innerText = "Login";
+        toggleForm.innerText = "New user? Register here";
+      } else {
+        formTitle.innerText = "📝 Register";
+        actionBtn.innerText = "Register";
+        toggleForm.innerText = "Already have an account? Login here";
+      }
+    });
+
+    actionBtn.addEventListener("click", () => {
+      const userId = document.getElementById("userId").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!userId || !password) {
+        alert("Please fill in all fields");
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem("ww_users")) || {};
+
+      if (isLogin) {
+        // LOGIN
+        if (users[userId] && users[userId] === password) {
+          localStorage.setItem("ww_user", JSON.stringify({ userId }));
+          window.location.href = "index.html"; // dashboard
+        } else {
+          alert("Invalid UserID or Password");
+        }
+      } else {
+        // REGISTER
+        if (users[userId]) {
+          alert("UserID already exists! Pick another.");
+        } else {
+          users[userId] = password;
+          localStorage.setItem("ww_users", JSON.stringify(users));
+          alert("Registration successful! You can now log in.");
+          // Switch to login mode
+          isLogin = true;
+          formTitle.innerText = "🔑 Login";
+          actionBtn.innerText = "Login";
+          toggleForm.innerText = "New user? Register here";
+        }
+      }
+    });
+  </script>
+</body>
+</html>

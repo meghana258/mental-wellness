@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌸 7-Day Stress Relief Challenges</title>
+<style>
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+  color: #2d3436;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.back-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  transition: background 0.3s;
+}
+.back-btn:hover { background: rgba(255,255,255,1); }
+
+h1 {
+  margin-top: 3rem;
+  font-size: 2.5rem;
+  text-align: center;
+  background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+  color: transparent;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #2d3436;
+  font-weight: 500;
+}
+#pointsDisplay {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  color: #2d3436;
+}
+
+.challenge-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  width: 90%;
+  max-width: 900px;
+  margin-bottom: 2rem;
+}
+
+.challenge-card {
+  background: linear-gradient(135deg, #ffffff, #ffe0b2);
+  padding: 1rem;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.challenge-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+
+.challenge-card.completed {
+  background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+  color: #055a4f;
+}
+
+.challenge-card.locked::after {
+  content: "Locked";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-radius: 16px;
+}
+
+.challenge-card h3 {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.challenge-card p {
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+textarea {
+  width: 100%;
+  min-height: 50px;
+  margin-bottom: 0.5rem;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  resize: none;
+}
+button.complete-btn, button.comment-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 5px;
+}
+button.complete-btn {
+  background: #ffab91;
+  color: #2d3436;
+  transition: background 0.3s;
+}
+button.complete-btn:hover { background: #ff7043; }
+button.comment-btn {
+  background: #ffe57f;
+  color: #2d3436;
+}
+button.comment-btn:hover { background: #ffd54f; }
+
+.comment-list p {
+  margin: 2px 0;
+  padding: 3px 5px;
+  background: #dfe6e9;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+.reflection-label, .comment-label {
+  font-weight: bold;
+  margin-bottom: 3px;
+  align-self: flex-start;
+}
+.quote {
+  font-size: 0.85rem;
+  color: #616161;
+  margin: 5px 0;
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<button class="back-btn" onclick="location.href='index.html'">← Back to Dashboard</button>
+
+<h1>🌸 Stress Relief Challenges</h1>
+<h2>7 days of gratitude & self-care habits</h2>
+<div id="pointsDisplay">Total Points: 0</div>
+
+<div class="challenge-container" id="challengeContainer"></div>
+
+<script>
+const challenges = [
+  "Write 3 things you are grateful for.",
+  "Take a 10-minute mindful walk.",
+  "Do 5 minutes of deep breathing.",
+  "Draw or doodle something you enjoy.",
+  "Spend 10 minutes without your phone.",
+  "Compliment or help someone today.",
+  "Reflect on the week and write your thoughts."
+];
+
+const quotes = [
+  "Gratitude turns what we have into enough.",
+  "Mindfulness is the aware, balanced acceptance of the present.",
+  "Breathing in, I calm body and mind. Breathing out, I smile.",
+  "Art washes away from the soul the dust of everyday life.",
+  "Disconnect to reconnect.",
+  "Kindness is a language which the deaf can hear and the blind can see.",
+  "Reflection is the lamp of the heart."
+];
+
+let completed = JSON.parse(localStorage.getItem('stress_challenges'));
+if(!completed || completed.length !== challenges.length){
+  completed = challenges.map(() => ({done:false, reflection:"", comments:[]}));
+  localStorage.setItem('stress_challenges', JSON.stringify(completed));
+}
+
+let points = JSON.parse(localStorage.getItem('stress_points')) || 0;
+const pointsDisplay = document.getElementById("pointsDisplay");
+function updatePointsDisplay(){ pointsDisplay.textContent = `Total Points: ${points}`; }
+updatePointsDisplay();
+
+const container = document.getElementById("challengeContainer");
+
+function updateLocks(){
+  const firstIncompleteIndex = completed.findIndex(c=>!c.done);
+  const cards = document.querySelectorAll(".challenge-card");
+  cards.forEach((card, idx)=>{
+    if(idx > firstIncompleteIndex && !completed[idx].done){
+      card.classList.add("locked");
+    } else {
+      card.classList.remove("locked");
+    }
+  });
+}
+
+challenges.forEach((task,index)=>{
+  const card = document.createElement("div");
+  card.classList.add("challenge-card");
+  if(completed[index].done) card.classList.add("completed");
+
+  const title = document.createElement("h3"); title.textContent = `Day ${index+1}`;
+  const desc = document.createElement("p"); desc.textContent = task;
+
+  const quote = document.createElement("p"); quote.classList.add("quote");
+  quote.textContent = quotes[index];
+
+  const reflectionLabel = document.createElement("div");
+  reflectionLabel.classList.add("reflection-label");
+  reflectionLabel.textContent="Reflection:";
+  const textarea = document.createElement("textarea");
+  textarea.placeholder = "Write your reflection here...";
+  textarea.value = completed[index].reflection;
+  if(completed[index].done) textarea.disabled = true;
+
+  const btn = document.createElement("button");
+  btn.textContent = completed[index].done ? "Completed" : "Mark Complete";
+  btn.classList.add("complete-btn");
+  btn.disabled = completed[index].done;
+
+  btn.addEventListener("click", ()=>{
+    const reflection = textarea.value.trim();
+    const firstIncompleteIndex = completed.findIndex(c=>!c.done);
+
+    if(firstIncompleteIndex !== index){
+      alert("You missed a previous day! -5 points applied.");
+      points = Math.max(0, points-5);
+      localStorage.setItem('stress_points', JSON.stringify(points));
+      updatePointsDisplay();
+      return;
+    }
+    if(!reflection){
+      alert("Write your reflection before completing!");
+      return;
+    }
+
+    card.classList.add("completed");
+    btn.textContent="Completed";
+    btn.disabled = true;
+    textarea.disabled = true;
+
+    completed[index].done = true;
+    completed[index].reflection = reflection;
+    points += 10;
+    localStorage.setItem('stress_points', JSON.stringify(points));
+    updatePointsDisplay();
+
+    localStorage.setItem('stress_challenges', JSON.stringify(completed));
+    updateLocks();
+  });
+
+  const commentLabel = document.createElement("div");
+  commentLabel.classList.add("comment-label");
+  commentLabel.textContent="Comments:";
+  const commentTextarea = document.createElement("textarea");
+  commentTextarea.placeholder = "Write a comment..."; commentTextarea.style.height="40px";
+  const commentBtn = document.createElement("button");
+  commentBtn.textContent="Add Comment"; commentBtn.classList.add("comment-btn");
+  const commentList = document.createElement("div"); commentList.classList.add("comment-list");
+
+  completed[index].comments.forEach(c=>{
+    const p=document.createElement("p"); p.textContent=c; commentList.appendChild(p);
+  });
+
+  commentBtn.addEventListener("click", ()=>{
+    const comment=commentTextarea.value.trim(); if(!comment) return;
+    completed[index].comments.push(comment);
+    localStorage.setItem('stress_challenges', JSON.stringify(completed));
+    const p=document.createElement("p"); p.textContent=comment; commentList.appendChild(p);
+    commentTextarea.value="";
+  });
+
+  card.append(title, desc, quote, reflectionLabel, textarea, btn, commentLabel, commentTextarea, commentBtn, commentList);
+  container.appendChild(card);
+});
+
+updateLocks();
+</script>
+</body>
+</html>

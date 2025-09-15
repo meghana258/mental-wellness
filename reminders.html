@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wellness Reminders - Hostel</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #fff9e6, #f0f4f8);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #f57c00;
+    margin-bottom: 25px;
+  }
+
+  .task-card {
+    background: #ffffffdd;
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 700px;
+    margin: 20px auto;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff3e0;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+
+  li.completed {
+    background: #c8e6c9;
+    text-decoration: line-through;
+    color: #555;
+  }
+
+  button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #f57c00;
+    color: white;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background: #ef6c00;
+  }
+</style>
+</head>
+<body>
+
+<h1>🧘 Wellness Reminders</h1>
+
+<div class="task-card">
+  <h2>Today's Tasks</h2>
+  <ul id="taskList">
+    <!-- Tasks will appear here -->
+  </ul>
+</div>
+
+<script>
+  const defaultTasks = [
+    "Morning Training / Exercise",
+    "Drawing / Painting",
+    "Knitting / Handicraft",
+    "Read a self-improvement book",
+    "Mindfulness / Meditation",
+    "Journaling",
+    "Healthy Meal Preparation"
+  ];
+
+  // Load saved tasks
+  let tasks = JSON.parse(localStorage.getItem('wellnessTasks')) || defaultTasks.map(t => ({name: t, done: false}));
+
+  const taskList = document.getElementById('taskList');
+
+  function saveTasks() {
+    localStorage.setItem('wellnessTasks', JSON.stringify(tasks));
+  }
+
+  function renderTasks() {
+    taskList.innerHTML = '';
+    tasks.forEach((task, index) => {
+      const li = document.createElement('li');
+      li.className = task.done ? 'completed' : '';
+      li.innerHTML = `
+        <span>${task.name}</span>
+        <button onclick="toggleTask(${index})">${task.done ? 'Undo' : 'Done'}</button>
+      `;
+      taskList.appendChild(li);
+    });
+  }
+
+  function toggleTask(index) {
+    tasks[index].done = !tasks[index].done;
+    saveTasks();
+    renderTasks();
+  }
+
+  renderTasks();
+</script>
+
+</body>
+</html>

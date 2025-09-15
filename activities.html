@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hostel Group Activities</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #d0e8f2);
+    padding: 20px;
+    margin: 0;
+  }
+  h1,h2 { text-align: center; color:#333; }
+  .card {
+    background: rgba(255,255,255,0.85);
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 700px;
+    margin: 20px auto;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  ul { list-style: none; padding:0; }
+  li { display:flex; flex-direction:column; justify-content: space-between; margin-bottom:12px; padding:12px; border-radius:10px; background:#e1f5fe; }
+  .activity-header { display:flex; justify-content: space-between; align-items:center; margin-bottom: 6px; }
+  .participants { font-size: 0.85rem; color: #555; margin-top: 4px; }
+  button { padding:6px 12px; border:none; border-radius:8px; cursor:pointer; background:#4a90e2; color:white; transition:0.2s; margin-left:5px; }
+  button:hover { background:#357ABD; }
+  #activityGame { margin-top:15px; text-align:center; display:none; }
+  #gameContent button { margin:5px; }
+</style>
+</head>
+<body>
+
+<h1>🎯 Hostel Group Activities</h1>
+
+<div class="card">
+  <h2>Available Activities</h2>
+  <ul id="activityList">
+    <!-- Activity items will be listed here -->
+  </ul>
+</div>
+
+<div class="card" id="activityGame">
+  <h2>🎮 Play Activity</h2>
+  <p id="gameTitle"></p>
+  <div id="gameContent"></div>
+  <button onclick="closeGame()">Exit Game</button>
+</div>
+
+<script>
+const activities = [
+  {name: "♟ Chess Club", joined: []},
+  {name: "⚽ Football Match", joined: []},
+  {name: "🗣 Debate Competition", joined: []},
+  {name: "💻 Coding Quiz", joined: []},
+  {name: "🎨 Art Workshop", joined: []}
+];
+
+// Load saved join data from localStorage
+let savedData = JSON.parse(localStorage.getItem('activities')) || activities;
+function saveData(){ localStorage.setItem('activities', JSON.stringify(savedData)); }
+
+function renderActivities(){
+  const list = document.getElementById('activityList');
+  list.innerHTML = '';
+  savedData.forEach((act,index)=>{
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div class="activity-header">
+        <strong>${act.name}</strong>
+        <div>
+          <button onclick="joinActivity(${index})">Join</button>
+          <button onclick="playActivity(${index})">Play</button>
+        </div>
+      </div>
+      <div class="participants">${act.joined.length>0? 'Participants: ' + act.joined.join(', '): 'No participants yet'}</div>
+    `;
+    list.appendChild(li);
+  });
+}
+
+function joinActivity(index){
+  const name = prompt("Enter your name to join this activity:");
+  if(!name) return;
+  if(!savedData[index].joined.includes(name)){
+    savedData[index].joined.push(name);
+    saveData();
+    renderActivities();
+    alert(`✅ ${name} joined ${savedData[index].name}`);
+  } else {
+    alert("You already joined this activity!");
+  }
+}
+
+function playActivity(index){
+  document.getElementById('activityGame').style.display='block';
+  document.getElementById('gameTitle').innerText = savedData[index].name;
+  const content = document.getElementById('gameContent');
+
+  // Mini-game / activity content
+  switch(savedData[index].name){
+    case "💻 Coding Quiz":
+      content.innerHTML = `
+        <p>Q: What does HTML stand for?</p>
+        <button onclick="alert('✅ Correct!')">Hyper Text Markup Language</button>
+        <button onclick="alert('❌ Wrong!')">High Text Machine Language</button>
+      `;
+      break;
+    case "♟ Chess Club":
+      content.innerHTML = `<p>Welcome to Chess! (Add an online chess board here)</p>`;
+      break;
+    case "⚽ Football Match":
+      content.innerHTML = `<p>Organize a friendly football match with your team! ⚽</p>`;
+      break;
+    default:
+      content.innerHTML = `<p>Activity: ${savedData[index].name}. Add fun interactive content here!</p>`;
+  }
+}
+
+function closeGame(){
+  document.getElementById('activityGame').style.display='none';
+  document.getElementById('gameContent').innerHTML='';
+}
+
+renderActivities();
+</script>
+
+</body>
+</html>

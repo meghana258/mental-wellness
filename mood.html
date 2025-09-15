@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Your Mood</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f4f8fb 0%, #e8f0f5 100%);
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.85);
+    border-radius: 16px;
+    padding: 25px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+
+  h2 { text-align: center; margin-bottom: 20px; color: #333; }
+
+  label { display: block; margin-top: 10px; font-weight: 500; color: #555; }
+
+  textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: vertical;
+  }
+
+  select, input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.2s;
+  }
+
+  button:hover { background: #357ABD; }
+
+  .success { margin-top: 15px; text-align: center; color: green; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>📓 Write Your Mood</h2>
+  <form id="moodForm">
+
+    <label>1. How was your focus today?</label>
+    <textarea name="q1" placeholder="Type your response here..." required></textarea>
+
+    <label>2. How stressed did you feel?</label>
+    <textarea name="q2" placeholder="Type your response here..." required></textarea>
+
+    <label>3. How happy were you today?</label>
+    <textarea name="q3" placeholder="Type your response here..." required></textarea>
+
+    <label>4. How productive were you?</label>
+    <textarea name="q4" placeholder="Type your response here..." required></textarea>
+
+    <label>5. How relaxed did you feel?</label>
+    <textarea name="q5" placeholder="Type your response here..." required></textarea>
+
+    <label>Overall day summary:</label>
+    <textarea name="dayRating" placeholder="Type your summary here..." required></textarea>
+
+    <label>Peer Feedback / Assignment Challenge?</label>
+    <select name="peerFeedback">
+      <option value="">None</option>
+      <option value="Peer Feedback">Peer Feedback</option>
+      <option value="Assignment Challenge">Assignment Challenge</option>
+    </select>
+
+    <button type="submit">Save Mood</button>
+    <div class="success" id="successMsg"></div>
+  </form>
+</div>
+
+<script>
+const form = document.getElementById('moodForm');
+const successMsg = document.getElementById('successMsg');
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const data = new FormData(form);
+  
+  const moodEntry = {
+    date: new Date().toISOString().split('T')[0],
+    q1: data.get('q1'),
+    q2: data.get('q2'),
+    q3: data.get('q3'),
+    q4: data.get('q4'),
+    q5: data.get('q5'),
+    dayRating: data.get('dayRating'),
+    peerFeedback: data.get('peerFeedback')
+  };
+
+  const existingMoods = JSON.parse(localStorage.getItem('moods') || '[]');
+  existingMoods.push(moodEntry);
+  localStorage.setItem('moods', JSON.stringify(existingMoods));
+
+  successMsg.innerText = "✅ Mood saved successfully!";
+  setTimeout(() => successMsg.innerText = "", 3000);
+  form.reset();
+});
+</script>
+
+</body>
+</html>

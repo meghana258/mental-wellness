@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meditation - Hostel Wellness</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+  overflow-x: hidden;
+  color: #2d3436;
+}
+
+h1 {
+  margin: 2rem 0 0.5rem;
+  font-size: 2rem;
+  text-align: center;
+}
+p {
+  text-align: center;
+  font-size: 1rem;
+  max-width: 600px;
+  margin-bottom: 1rem;
+}
+
+/* Floating shapes for meditation vibe */
+.floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: float 10s infinite ease-in-out alternate;
+  z-index: 0;
+}
+.floating-shape:nth-child(1) { width: 200px; height: 200px; top: 10%; left: 10%; }
+.floating-shape:nth-child(2) { width: 150px; height: 150px; bottom: 15%; right: 15%; }
+.floating-shape:nth-child(3) { width: 100px; height: 100px; top: 60%; left: 25%; }
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-30px); }
+}
+
+/* Breathing circle */
+.circle {
+  width: 180px;
+  height: 180px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #2d3436;
+  margin-top: 2rem;
+  transition: transform 0.5s ease, background 0.5s ease;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.8);
+  color: #2d3436;
+  transition: background 0.3s;
+}
+button:hover { background: #fff; }
+
+.timer { margin-top: 15px; font-size: 1.3rem; font-weight: bold; }
+
+.back {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 5px 10px;
+}
+
+/* Fun facts box */
+.facts-box {
+  margin-top: 2rem;
+  background: rgba(255,255,255,0.5);
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  max-width: 700px;
+  text-align: center;
+  font-size: 1rem;
+  min-height: 50px;
+}
+</style>
+</head>
+<body>
+
+<!-- Back button -->
+<button class="back" onclick="location.href='index.html'">← Back</button>
+
+<h1>🧘 Guided Meditation</h1>
+<p>Breathe mindfully and learn small meditation tips along the way.</p>
+
+<div class="circle" id="breatheCircle">Inhale</div>
+
+<div class="controls">
+  <button onclick="startMeditation(1)">1 min</button>
+  <button onclick="startMeditation(3)">3 min</button>
+  <button onclick="startMeditation(5)">5 min</button>
+  <button onclick="toggleSound()">🔊 Sound</button>
+</div>
+
+<div class="timer" id="timer">Select duration</div>
+
+<div class="facts-box" id="factsBox">Fun meditation facts will appear here...</div>
+
+<audio id="meditationSound" loop>
+  <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
+</audio>
+
+<!-- Floating shapes for vibe -->
+<div class="floating-shape"></div>
+<div class="floating-shape"></div>
+<div class="floating-shape"></div>
+
+<script>
+let countdown;
+let factInterval;
+let breatheTimeout;
+
+const timerEl = document.getElementById("timer");
+const sound = document.getElementById("meditationSound");
+const circle = document.getElementById("breatheCircle");
+const factsBox = document.getElementById("factsBox");
+
+const facts = [
+  "Meditation can reduce stress in just a few minutes.",
+  "Regular practice boosts focus and clarity.",
+  "Mindful breathing lowers heart rate.",
+  "Meditation can enhance creativity.",
+  "It has been practiced for over 5,000 years.",
+  "Even 1-minute daily meditation has benefits.",
+  "Meditation strengthens emotional resilience.",
+  "It can improve sleep quality."
+];
+
+function startMeditation(minutes) {
+  clearInterval(countdown);
+  clearInterval(factInterval);
+  clearTimeout(breatheTimeout);
+
+  let time = minutes * 60;
+  timerEl.textContent = formatTime(time);
+
+  // Start breathing cycle
+  breatheStep(0);
+
+  // Random facts display
+  factInterval = setInterval(() => {
+    const randomFact = facts[Math.floor(Math.random() * facts.length)];
+    factsBox.textContent = randomFact;
+  }, 5000);
+
+  // Countdown timer
+  countdown = setInterval(() => {
+    time--;
+    timerEl.textContent = formatTime(time);
+    if (time <= 0) {
+      clearInterval(countdown);
+      clearInterval(factInterval);
+      clearTimeout(breatheTimeout);
+      timerEl.textContent = "✅ Done! Feel refreshed ✨";
+      circle.textContent = "Relax";
+      circle.style.transform = "scale(1)";
+      factsBox.textContent = "Great job! Keep meditating daily.";
+      sound.pause();
+    }
+  }, 1000);
+
+  sound.play();
+}
+
+function breatheStep(stepIndex){
+  const steps = [
+    { text: "Inhale", duration: 4000, scale: 1.5 },
+    { text: "Hold", duration: 2000, scale: 1.5 },
+    { text: "Exhale", duration: 4000, scale: 1 }
+  ];
+
+  circle.textContent = steps[stepIndex].text;
+  circle.style.transform = `scale(${steps[stepIndex].scale})`;
+  breatheTimeout = setTimeout(() => {
+    breatheStep((stepIndex + 1) % steps.length);
+  }, steps[stepIndex].duration);
+}
+
+function toggleSound(){
+  if(sound.paused){ sound.play(); } else { sound.pause(); }
+}
+
+function formatTime(seconds){
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s < 10 ? "0" : ""}${s}`;
+}
+</script>
+
+</body>
+</html>

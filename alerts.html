@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Early Alerts - Hostel Wellness</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #ffe6e6 0%, #fff0f5 100%);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #b71c1c;
+    margin-bottom: 25px;
+  }
+
+  .alert-card, .chart-card {
+    background: #ffffffdd;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    color: #b71c1c;
+    margin-bottom: 15px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    background: #ffebee;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    color: #b71c1c;
+    font-weight: 500;
+  }
+
+  canvas {
+    margin-top: 15px;
+  }
+</style>
+</head>
+<body>
+
+<h1>🚨 Early Alerts</h1>
+
+<div class="alert-card">
+  <h2>Students at Risk</h2>
+  <ul id="alertsList">
+    <!-- Alerts will appear here -->
+  </ul>
+</div>
+
+<div class="chart-card">
+  <h2>Mood Trends</h2>
+  <canvas id="alertsMoodChart"></canvas>
+</div>
+
+<script>
+  // Fetch saved mood & feedback data
+  const moods = JSON.parse(localStorage.getItem('moods')) || [];
+  const feedbacks = JSON.parse(localStorage.getItem('consultantFeedback')) || [];
+
+  const alertsList = document.getElementById('alertsList');
+
+  // Identify students whose mood dropped below threshold or is decreasing
+  const alertThreshold = 2.5; // average below this triggers alert
+  let alerts = [];
+
+  moods.forEach((entry, idx) => {
+    const avgMood = (entry.q1 + entry.q2 + entry.q3 + entry.q4 + entry.q5)/5;
+    if(avgMood < alertThreshold){
+      alerts.push({
+        date: entry.date,
+        reason: `Low average mood: ${avgMood.toFixed(1)}`
+      });
+    }
+  });
+
+  // Add consultant feedback issues
+  feedbacks.forEach(fb => {
+    if(fb.feedback.toLowerCase().includes('concern')){
+      alerts.push({date: fb.date, reason: `Consultant flagged concern: ${fb.feedback}`});
+    }
+  });
+
+  // Display alerts
+  if(alerts.length === 0){
+    alertsList.innerHTML = '<li>No alerts detected. All students are stable.</li>';
+  } else {
+    alerts.forEach(alert => {
+      const li = document.createElement('li');
+      li.textContent = `${alert.date}: ${alert.reason}`;
+      alertsList.appendChild(li);
+    });
+  }
+
+  // Generate mood trend chart for reference
+  const labels = moods.map(entry => entry.date);
+  const moodScores = moods.map(entry => (entry.q1 + entry.q2 + entry.q3 + entry.q4 + entry.q5)/5);
+
+  const ctx = document.getElementById('alertsMoodChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Average Mood',
+        data: moodScores,
+        borderColor: '#e53935',
+        backgroundColor: 'rgba(229,57,53,0.2)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        title: { display: true, text: 'Mood Trend for Reference' }
+      },
+      scales: {
+        y: {
+          min: 1,
+          max: 5,
+          ticks: { stepSize: 1 }
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

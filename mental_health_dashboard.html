@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Health Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #e0f7fa 0%, #f0f4f8 100%);
+    margin: 0;
+    padding: 30px;
+  }
+
+  h1 { text-align: center; color: #1a1a2e; margin-bottom: 25px; }
+  .chart-container {
+    max-width: 800px;
+    margin: 30px auto;
+    background: #ffffffdd;
+    padding: 20px 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  }
+  h2 { color: #1a1a2e; margin-bottom: 15px; font-size: 1.5rem; }
+</style>
+</head>
+<body>
+
+<h1>📊 Mental Health Dashboard</h1>
+
+<div class="chart-container">
+  <h2>Self-Reported Mood / Activity Scores</h2>
+  <canvas id="moodChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <h2>Assignment / Quiz Performance</h2>
+  <canvas id="quizChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <h2>Consultant Feedback Ratings</h2>
+  <canvas id="feedbackChart"></canvas>
+</div>
+
+<script>
+  // Load data from localStorage
+  const moods = JSON.parse(localStorage.getItem('moods') || '[]'); // self-reported
+  const quizzes = JSON.parse(localStorage.getItem('quizData') || '[]'); // quiz/assignment scores
+  const consultantFeedback = JSON.parse(localStorage.getItem('consultantFeedback') || '[]'); // counsellor notes
+
+  // Prepare data for charts
+  const labels = moods.map(item => item.date);
+
+  // 1. Self-reported mood scores (average of 5 questions)
+  const moodScores = moods.map(item => 
+    (parseInt(item.q1)+parseInt(item.q2)+parseInt(item.q3)+parseInt(item.q4)+parseInt(item.q5))/5
+  );
+
+  // 2. Quiz/Assignment scores
+  const quizScores = quizzes.map(item => parseInt(item.score));
+
+  // 3. Consultant ratings (assume numeric rating 1-5)
+  const feedbackScores = consultantFeedback.map(item => parseInt(item.rating));
+
+  // Mood Chart
+  new Chart(document.getElementById('moodChart'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Average Mood / Activity',
+        data: moodScores,
+        borderColor: '#4dd0e1',
+        backgroundColor: 'rgba(77,208,225,0.2)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 6,
+        pointBackgroundColor: '#26c6da'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true }, title: { display: true, text: 'Mood Trend Over Days' } },
+      scales: { y: { min: 1, max: 5, ticks: { stepSize: 1 } } }
+    }
+  });
+
+  // Quiz Chart
+  new Chart(document.getElementById('quizChart'), {
+    type: 'bar',
+    data: {
+      labels: quizzes.map(q => q.date),
+      datasets: [{
+        label: 'Quiz / Assignment Score',
+        data: quizScores,
+        backgroundColor: '#81d4fa'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true }, title: { display: true, text: 'Student Engagement / Performance' } },
+      scales: { y: { min: 0, max: 100 } }
+    }
+  });
+
+  // Consultant Feedback Chart
+  new Chart(document.getElementById('feedbackChart'), {
+    type: 'line',
+    data: {
+      labels: consultantFeedback.map(f => f.date),
+      datasets: [{
+        label: 'Consultant Rating (1-5)',
+        data: feedbackScores,
+        borderColor: '#f39c12',
+        backgroundColor: 'rgba(243,156,18,0.2)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 6,
+        pointBackgroundColor: '#f1c40f'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true }, title: { display: true, text: 'Consultant Feedback Trend' } },
+      scales: { y: { min: 1, max: 5, ticks: { stepSize: 1 } } }
+    }
+  });
+</script>
+
+</body>
+</html>

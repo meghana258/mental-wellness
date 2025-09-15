@@ -84,7 +84,7 @@
         // LOGIN
         if (users[userId] && users[userId] === password) {
           localStorage.setItem("ww_user", JSON.stringify({ userId }));
-          window.location.href = "index.html"; // dashboard
+          window.location.href = "dashboard.html"; // dashboard
         } else {
           alert("Invalid UserID or Password");
         }

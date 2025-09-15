@@ -1,199 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌿 Hostel Wellness Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Hostel Wellness</title>
+  <link rel="stylesheet" href="style.css">
   <style>
     /* Reset */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: "Poppins", sans-serif;
       min-height: 100vh;
-      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      padding: 20px;
-      overflow-x: hidden;
-      position: relative;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      overflow: hidden;
     }
 
-    /* Floating shapes */
+    /* Floating circles background */
     .circle {
       position: absolute;
       border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      animation: float 12s infinite ease-in-out alternate;
-      z-index: 0;
+      background: rgba(255, 255, 255, 0.2);
+      animation: float 10s infinite ease-in-out alternate;
     }
-    .circle:nth-child(1) { width: 220px; height: 220px; top: 10%; left: 10%; }
-    .circle:nth-child(2) { width: 180px; height: 180px; bottom: 10%; right: 15%; }
-    .circle:nth-child(3) { width: 120px; height: 120px; top: 60%; left: 25%; }
+    .circle:nth-child(1) { width: 200px; height: 200px; top: 10%; left: 15%; }
+    .circle:nth-child(2) { width: 150px; height: 150px; bottom: 15%; right: 10%; }
+    .circle:nth-child(3) { width: 100px; height: 100px; top: 70%; left: 20%; }
 
     @keyframes float {
       0% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-      100% { transform: translateY(0px); }
+      100% { transform: translateY(-30px); }
+    }
+
+    /* Card */
+    .card {
+      position: relative;
+      padding: 3rem 2.5rem;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+      z-index: 2;
+      max-width: 450px;
     }
 
     h1 {
-      z-index: 2;
-      color: #222;
-      margin-bottom: 30px;
       font-size: 2rem;
-      text-align: center;
+      color: #2d3436;
+      margin-bottom: 1rem;
     }
 
-    main.dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      max-width: 1200px;
-      width: 100%;
-      z-index: 2;
-      position: relative;
+    p.muted {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 2rem;
     }
 
-    .card {
-      background: rgba(255,255,255,0.25);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      transition: transform 0.3s, box-shadow 0.3s;
-      opacity: 0;
-      animation: fadeIn 0.6s forwards;
-    }
-
-    .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-    }
-
-    .card h2 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-      color: #222;
-    }
-
-    .card p {
-      font-size: 0.95rem;
-      color: #333;
-      margin-bottom: 15px;
-    }
-
-    .card button {
-      padding: 10px 20px;
+    button {
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
       border: none;
-      border-radius: 25px;
-      font-size: 0.95rem;
-      font-weight: bold;
-      color: #fff;
+      border-radius: 30px;
       cursor: pointer;
       background: linear-gradient(135deg, #6a11cb, #2575fc);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      color: #fff;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .card button:hover {
+    button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-      background: linear-gradient(135deg, #2575fc, #6a11cb);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
-
-  <!-- Floating background shapes -->
+  <!-- Floating background circles -->
   <div class="circle"></div>
   <div class="circle"></div>
   <div class="circle"></div>
 
-  <h1>🌿 Hostel Wellness Dashboard</h1>
-
-  <main class="dashboard-grid">
-    <!-- Self-Help & Wellness Tools -->
-    <section class="card" style="animation-delay:0.2s;">
-      <h2>📝 Journal</h2>
-      <p>Track how you feel and reflect with prompts.</p>
-      <button onclick="location.href='journal.html'">Open</button>
-    </section>
-
-    <section class="card" style="animation-delay:0.4s;">
-      <h2>🧘 Guided Meditation & Sleep</h2>
-      <p>Relax with breathing exercises & stories.</p>
-      <button onclick="location.href='meditation.html'">Open</button>
-    </section>
-
-    <section class="card" style="animation-delay:0.6s;">
-      <h2>🌸 Stress Relief Challenges</h2>
-      <p>7 days of gratitude & self-care habits.</p>
-      <button onclick="location.href='challenges.html'">Open</button>
-    </section>
-
-    <section class="card">
-      <h2>📈 Mental Health Dashboard</h2>
-      <p>View your mood trends and consultant feedback over time.</p>
-      <button onclick="location.href='mental_health_dashboard.html'">Open</button>
-    </section>
-    
-    <section class="card" style="animation-delay:0.8s;">
-      <h2>📓 Mood Tracking</h2>
-      <p>Log your daily mood and visualize your emotions for better self-awareness.</p>
-      <button onclick="location.href='mood.html'">Track Mood</button>
-    </section>
-
-    <section class="card" style="animation-delay:1.2s;">
-      <h2>👩‍⚕️ Book a Counselor</h2>
-      <p>Schedule online appointments with certified counselors confidentially.</p>
-      <button onclick="location.href='bookings.html'">Book Session</button>
-    </section>
-
-    <section class="card" style="animation-delay:1.4s;">
-      <h2>⚠️ Early Alerts</h2>
-      <p>Smart detection of behavior patterns to gently flag possible concerns early.</p>
-      <button onclick="location.href='alerts.html'">View Alerts</button>
-    </section>
-
-    <!-- Community & Peer Support -->
-    <section class="card" style="animation-delay:1.6s;">
-      <h2>💬 Anonymous Forum</h2>
-      <p>Share & support each other safely.</p>
-      <button onclick="location.href='forum.html'">Join</button>
-    </section>
-
-    <section class="card" style="animation-delay:2s;">
-      <h2>🎨 Group Activities</h2>
-      <p>Mindfulness, yoga, & art therapy sessions.</p>
-      <button onclick="location.href='activities.html'">View</button>
-    </section>
-
-    <section class="card" style="animation-delay:2.2s;">
-      <h2>⏰ Wellness Reminders</h2>
-      <p>Hydration, sleep, and study breaks.</p>
-      <button onclick="location.href='reminders.html'">Set</button>
-    </section>
-
-    <section class="card" style="animation-delay:2.4s;">
-      <h2>👥 Peer Check-Ins</h2>
-      <p>Stay connected with fellow residents.</p>
-      <button onclick="location.href='checkins.html'">Start</button>
-    </section>
-
-    <section class="card" style="animation-delay:3s;">
-      <h2>📊 Leaderboards</h2>
-      <p>See group challenge rankings.</p>
-      <button onclick="location.href='leaderboard.html'">Open</button>
-    </section>
-
-  </main>
-
+  <!-- Main card -->
+  <div class="card">
+    <h1>🌿 Welcome to Your Hostel Wellness Journey</h1>
+    <p class="muted">Take care of your mind, connect with peers, and grow together.</p>
+    <button onclick="location.href='login.html'">Join the Journey</button>
+  </div>
 </body>
 </html>
